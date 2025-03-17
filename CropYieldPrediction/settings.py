@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2^_^8g8fs--2cfgf8ypt!o%x-jp-38rk+mm*glfi4=+jz&blr7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["polynomialprediction-bbedb2b6gwdyajhf.centralus-01.azurewebsites.net"]
 CSRF_TRUSTED_ORIGINS = [
     "https://polynomialprediction-bbedb2b6gwdyajhf.centralus-01.azurewebsites.net",
 ]
