@@ -27,9 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
-    'https://papaerchase-esgbcmhwdvfghbc2.canadacentral-01.azurewebsites.net'
+    "https://polynomialprediction-bbedb2b6gwdyajhf.centralus-01.azurewebsites.net",
 ]
-
 
 # Application definition
 
