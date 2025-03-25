@@ -30,7 +30,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://polynomialprediction-bbedb2b6gwdyajhf.centralus-01.azurewebsites.net",
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
