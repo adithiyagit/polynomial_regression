@@ -1,21 +1,219 @@
-<html>
- <head>
-     <title>Crop Yield Prediction</title>
-     <style>
-         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
-         form { background: white; padding: 20px; border-radius: 10px; display: inline-block; }
-         input { display: block; margin: 10px auto; padding: 10px; width: 80%; }
-         button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; }
-         button:hover { background: #218838; }
-     </style>
- </head>
- <body>
-     <h2>Crop Yield Prediction</h2>
-     <form method="POST">{% csrf_token %}
-         <input type="text" name="rainfall" placeholder="Rainfall (mm)" required>
-         <input type="text" name="temperature" placeholder="Temperature (°C)" required>
-         <input type="text" name="fertilizer" placeholder="Fertilizer (kg/hectare)" required>
-         <button type="submit">Predict Yield</button>
-     </form>
- </body>
- </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriAI | Crop Yield Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #8BC34A;
+            --accent: #CDDC39;
+            --dark: #2E7D32;
+            --light: #F1F8E9;
+            --text: #1B5E20;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            background-attachment: fixed;
+        }
+        
+        .prediction-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .prediction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        h2 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            font-size: 1.8rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 2px;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .input-group label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: white;
+            padding: 0 5px;
+            font-size: 0.8rem;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.3);
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        .predict-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .predict-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .predict-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .predict-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .predict-btn:hover::after {
+            left: 100%;
+        }
+        
+        .leaf-decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .leaf-1 {
+            top: -50px;
+            left: -50px;
+            font-size: 150px;
+            color: var(--primary);
+        }
+        
+        .leaf-2 {
+            bottom: -50px;
+            right: -50px;
+            font-size: 150px;
+            color: var(--secondary);
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 600px) {
+            .prediction-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="prediction-card animate__animated animate__fadeIn">
+        <div class="leaf-decoration leaf-1">🌱</div>
+        <div class="leaf-decoration leaf-2">🌱</div>
+        
+        <h2 class="animate__animated animate__fadeInDown">Crop Yield Prediction</h2>
+        
+        <form method="POST" class="animate__animated animate__fadeIn animate__delay-1s">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label>Rainfall</label>
+                <input type="number" step="0.1" name="rainfall" placeholder="Enter rainfall in mm" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Temperature</label>
+                <input type="number" step="0.1" name="temperature" placeholder="Enter temperature in °C" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Fertilizer</label>
+                <input type="number" step="0.1" name="fertilizer" placeholder="Enter fertilizer in kg/hectare" required>
+            </div>
+            
+            <button type="submit" class="predict-btn">
+                Predict Yield 🌾
+            </button>
+        </form>
+    </div>
+</body>
+</html>
